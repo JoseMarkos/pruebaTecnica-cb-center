@@ -71,7 +71,7 @@ const addQuestions = (req, res) => {
     con = connection;
     return con.query(sql);
   }).then(function(rows) {
-    return con.query('SELECT * FROM examenes WHERE id = ' + id);
+    return con.query('SELECT uid FROM examenes WHERE id = ' + id);
   }).then(function(rows) {
     con.release();
     res.json({url:rows[0].uid});
@@ -91,8 +91,9 @@ const getQuestions = (req, res) => {
     con = connection;
     return con.query(sql);
   }).then(function(rows) {
+    console.log(rows);
     con.release();
-    const { preguntas, nombre } = rows[0];
+    const { preguntas, nombre } = rows[rows.length - 1];
     res.json({preguntas: preguntas, text: nombre});
   }).catch(function(error) {
     console.log(error);
