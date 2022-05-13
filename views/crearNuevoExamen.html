@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<title>Examen</title>
+		<link rel="stylesheet" href="/public/style.css">
+		<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+	</head>
+	<body>
+		<main class="py-4">
+			<h1>Examen</h1>
+      <article>
+      </article>
+      <footer class="text-center">
+        <button class="btn btn-primary" id="guardar">Guardar</button>
+      </footer>
+		</main>
+
+    <template id="preguntasTemplate">
+      <section class="mb-3">
+        <label class="form-label pregunta-label"></label>
+        <input type="text" class="form-control pregunta-input" required>
+      </section>
+    </template>
+
+    <template id="respuestasTemplate">
+      <div class="mb-3 pl-5 pr-0 form-group d-flex align-items-center">
+        <label class="form-label respuesta-label flex-fill"></label>
+        <div class="flex-fill px-1">
+          <input type="text" class="form-control respuesta-input" required>
+        </div>
+        <div class="flex-fill px-1">
+          <input type="radio">
+        </div>
+        <label class="mb-0 flex-fill respuesta-correcta-label">Correcta</label>
+      </div>
+    </template>
+	
+		<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+		<script src="/bootstrap/js/bootstrap.min.js"></script>
+		<script>
+			$(document).ready(function() {
+        const id = window.location.pathname.split('/')[2];
+
+        $.ajax({
+          url: `/crear-nuevo-examen/${id}`,
+          type: 'GET',
+          dataType: 'json',
+          context: document.body,
+        }).done(function(data) {
+          if ( console && console.log ) {
+            fillPreguntas(data.cantidadPreguntas);
+          }
+        }).fail(function(o, error) {
+          console.log(error);
+        });
+
+        $('#guardar').click(function(){
+          let info = {
+            preguntas : []
+          };
+
+          let sections = $('section');
+          let questions = [];
+
+          sections.toArray().forEach(x => {
+            let sectionNum = x.classList[1].split('-')[1];
+            let respuestaCorrecta  = $(`[name="section${sectionNum}respuestaCorrecta"]:checked`).val();
+            respuestaCorrecta = Number(respuestaCorrecta);
+
+            let question = {
+              text: $(`[name="pregunta${sectionNum}"]`).val(),
+              answers: []
+            };
+
+            for(let i = 1; i < 4; i++) {
+              let respuesta = {
+                text : $('#section'+sectionNum+'respuesta'+ i).val(),
+                isRight: respuestaCorrecta === i
+              };
+              
+              question.answers.push(respuesta);
+            }
+
+            questions.push(question);
+          });
+
+          $.ajax({
+						url: window.location.origin + '/crear-nuevo-examen/' + id,
+						type: 'PUT',
+						dataType: 'json',
+  					context: document.body,
+						data: { 
+              id: id,
+							preguntas: JSON.stringify({ text: questions }),
+						}
+					}).done(function(data) {
+            console.log(data);
+						$(location).attr("href", `/examen/${data.url}`);
+					});
+        });
+
+        function fillPreguntas(cantidadPreguntas) {
+          if ('content' in document.createElement('template')) {
+            var article = document.querySelector("article");
+            var template = document.querySelector('#preguntasTemplate');
+    
+            for(let i = 1; i <= cantidadPreguntas; i++) {
+              var clone = template.content.cloneNode(true);
+              var preguntaLabel = clone.querySelectorAll(".pregunta-label");
+              var preguntaInput = clone.querySelectorAll(".pregunta-input");
+              var section = clone.querySelector("section");
+              preguntaLabel[0].textContent = "Pregunta " + i;
+              preguntaInput[0].id = "pregunta" + i;
+              preguntaInput[0].name = "pregunta" + i;
+              section.classList.add('section-' + i);
+              article.appendChild(clone);
+              fillRespuestas(3, i);
+            }
+          }
+        }
+
+        function fillRespuestas(cantidadRespuestas = 3, sectionNum) {
+          if ('content' in document.createElement('template')) {
+            var section = document.querySelector('.section-' + sectionNum);
+            var template = document.querySelector('#respuestasTemplate');
+    
+            for(let i = 1; i <= cantidadRespuestas; i++) {
+              var clone = template.content.cloneNode(true);
+              var respuestaLabel = clone.querySelectorAll('.respuesta-label');
+              var respuestaInput = clone.querySelector('.respuesta-input');
+              var respuestaCorrectaInput = clone.querySelector('input[type="radio"]');
+              var respuestaCorrectaLabel = clone.querySelector('.respuesta-correcta-label');
+              respuestaLabel[0].textContent = 'Respuesta ' + i;
+              respuestaInput.id = 'section' + sectionNum + 'respuesta' + i;
+              respuestaCorrectaInput.id = 'section' + sectionNum + 'respuestaCorrecta' + i;
+              respuestaCorrectaInput.name = 'section' + sectionNum + 'respuestaCorrecta';
+              respuestaCorrectaInput.value = i;
+              respuestaCorrectaLabel.setAttribute('for', respuestaCorrectaInput.id);
+              section.appendChild(clone);
+            }
+          }
+        }
+			});
+		</script>
+	</body>
+</html>

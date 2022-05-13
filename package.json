@@ -1,0 +1,19 @@
+{
+	"name": "profesor-api",
+	"author": "Jose Culajay",
+	"version": "0.1.0",
+	"dependencies": {
+		"body-parser": "^1.15.2",
+		"bootstrap": "^5.1.3",
+		"cookie-parser": "^1.4.3",
+		"dotenv": "^16.0.1",
+		"express": "^4.14.0",
+		"fcc-express-bground": "https://github.com/freeCodeCamp/fcc-express-bground-pkg.git",
+		"jquery": "^3.6.0",
+		"promise-mysql": "^5.2.0"
+	},
+	"main": "server.js",
+	"scripts": {
+		"start": "node server.js"
+	}
+}

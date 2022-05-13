@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<title>Examen</title>
+		<link rel="stylesheet" href="/public/style.css">
+		<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+	</head>
+	<body>
+		<main class="py-4">
+			<h1></h1>
+      <article>
+      </article>
+      <footer class="text-center mt-4">
+        <button class="btn btn-primary">Guardar</button>
+      </footer>
+		</main>
+
+    <template id="preguntasTemplate">
+      <section class="mb-3">
+        <h4 class="pregunta"></h4>
+        <div class="d-flex"></div>
+      </section>
+    </template>
+
+    <template id="respuestasTemplate">
+      <div class="mb-3 pl-5 pr-0 form-group d-flex align-items-center">
+        <label class="form-label respuesta-label flex-fill"></label>
+        <div class="flex-fill px-1">
+          <input type="radio">
+        </div>
+      </div>
+    </template>
+	
+		<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+		<script>
+			$(document).ready(function() {
+        const id = window.location.pathname.split('/')[2];
+
+        $.ajax({
+          url: `/examen-preguntas/${id}`,
+          type: 'GET',
+          dataType: 'json',
+          context: document.body,
+        }).done(function(data) {
+          if ( console && console.log ) {
+            console.log(data);
+            if (data.status) {
+              document.querySelector('h1').textContent = 'No existe';
+              return;
+            }
+
+            const preguntas = JSON.parse(data.preguntas);
+            document.querySelector('h1').textContent = data.text;
+
+            preguntas.text.forEach(element => {
+              fillPreguntas(element);
+            });
+          }
+        }).fail(function(o, error) {
+          console.log(error);
+          document.querySelector('h1').textContent = 'No existe';
+        });
+
+        function fillPreguntas(element) {
+          if ('content' in document.createElement('template')) {
+            var article = document.querySelector("article");
+            var template = document.querySelector('#preguntasTemplate');
+            var clone = template.content.cloneNode(true);
+            var pregunta = clone.querySelector(".pregunta");
+            pregunta.textContent = element.text;
+            var section = clone.querySelector("section");
+            var div = clone.querySelector("div");
+            section.classList.add('section-');
+            
+            for(let i = 0; i < element.answers.length; i++) {
+              let answerTemplate = document.querySelector('#respuestasTemplate');
+              let clone = answerTemplate.content.cloneNode(true);
+              let respuesta = clone.querySelector(".respuesta-label");
+              respuesta.textContent = element.answers[i].text;
+
+              div.appendChild(clone);
+            }
+            article.appendChild(clone);
+          }
+        }
+			});
+		</script>
+	</body>
+</html>
