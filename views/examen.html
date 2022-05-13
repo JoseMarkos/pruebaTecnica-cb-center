@@ -45,7 +45,6 @@
           context: document.body,
         }).done(function(data) {
           if ( console && console.log ) {
-            console.log(data);
             if (data.status) {
               document.querySelector('h1').textContent = 'No existe';
               return;

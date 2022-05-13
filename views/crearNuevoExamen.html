@@ -49,9 +49,7 @@
           dataType: 'json',
           context: document.body,
         }).done(function(data) {
-          if ( console && console.log ) {
-            fillPreguntas(data.cantidadPreguntas);
-          }
+          fillPreguntas(data.cantidadPreguntas);
         }).fail(function(o, error) {
           console.log(error);
         });
@@ -96,7 +94,6 @@
 							preguntas: JSON.stringify({ text: questions }),
 						}
 					}).done(function(data) {
-            console.log(data);
 						$(location).attr("href", `/examen/${data.url}`);
 					});
         });
