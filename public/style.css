@@ -42,3 +42,7 @@ input:invalid {
 .error.active {
   padding: 0.3em;
 }
+
+.respuesta-label {
+  max-width: 200px;
+}
