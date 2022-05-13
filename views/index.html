@@ -1,121 +1,126 @@
 <!DOCTYPE html>
 <html lang="es">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1">
-		<title>Profesor</title>
-		<link rel="stylesheet" href="/public/style.css">
-		<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-	</head>
-	<body>
-		<main>
-			<h1>Prueba técnica</h1>
-			<button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#detallesExamenModal">
-				Crear nuevo examen
-			</button>
-		</main>
-	
-		<!-- Modal -->
-		<div class="modal fade" id="detallesExamenModal" tabindex="-1" aria-labelledby="detallesExamenModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="detallesExamenModalLabel">Modal - detalles de examen</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-					</div>
-					<div class="modal-body">
-							<div class="mb-3">
-								<label for="nombreExamen" class="form-label text-uppercase">nombre examen
-								</label>
-								<input type="text" name="nombreExamen" id="nombreExamen" class="form-control" required>
-								<span class="error" aria-live="polite"></span>
-							</div>
-							<div class="mb-3">
-								<label class="form-label text-uppercase">
-									cantidad preguntas
-								</label>
-								<div class="form-check">
-									<input class="form-check-input" type="radio" name="cantidadPreguntas"  id="cantidadPreguntas1" value="1">
-									<label class="form-check-label" for="cantidadPreguntas1">
-										1
-									</label>
-								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="radio" name="cantidadPreguntas" id="cantidadPreguntas2" value="2">
-									<label class="form-check-label" for="cantidadPreguntas2">
-										2
-									</label>
-								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="radio" name="cantidadPreguntas" id="cantidadPreguntas3" value="3">
-									<label class="form-check-label" for="cantidadPreguntas3">
-										3
-									</label>
-								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="radio" name="cantidadPreguntas" id="cantidadPreguntas4" value="4">
-									<label class="form-check-label" for="cantidadPreguntas4">
-										4
-									</label>
-								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="radio" name="cantidadPreguntas" id="cantidadPreguntas5" value="5" checked>
-									<label class="form-check-label" for="cantidadPreguntas5">
-										5
-									</label>
-								</div>
-							</div>
-							<div class="text-center">
-								<button class="btn btn-primary" id="crearExamen">Guardar</button>
-							</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
-		<script src="/bootstrap/js/bootstrap.min.js"></script>
-		<script>
-			$(document).ready(function() {
-				$('#crearExamen').click(function(event) {
-					if ('' === $('[name="nombreExamen"]').val()) {
-						return;
-					}
 
-					$.ajax({
-						url: window.location.origin + '/crear-nuevo-examen',
-						type: 'POST',
-						dataType: 'json',
-  					context: document.body,
-						data: { 
-							nombreExamen: $('[name="nombreExamen"]').val(), 
-							cantidadPreguntas: $('[name="cantidadPreguntas"]:checked').val() 
-						}
-					}).done(function(data) {
-						$(location).attr("href", `/crear-preguntas/${data.id}`);
-					});
-				});
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Profesor</title>
+  <link rel="stylesheet" href="/public/style.css">
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+</head>
 
-				const nombreExamen = document.getElementById('nombreExamen'); 
-				const nombreExamenError = document.querySelector('#nombreExamen + span'); 
+<body>
+  <main>
+    <h1>Prueba técnica</h1>
+    <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#detallesExamenModal">
+      Crear nuevo examen
+    </button>
+  </main>
 
-				nombreExamen.addEventListener('input', function (event) {
-					if (nombreExamen.validity.valid) {
-						nombreExamenError.innerHTML = ''; // Reset the content of the message
-						nombreExamenError.className = 'error'; // Reset the visual state of the message
-					} else {
-						showError();
-					}
-				});
+  <!-- Modal -->
+  <div class="modal fade" id="detallesExamenModal" tabindex="-1" aria-labelledby="detallesExamenModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="detallesExamenModalLabel">Modal - detalles de examen</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="nombreExamen" class="form-label text-uppercase">nombre examen
+            </label>
+            <input type="text" name="nombreExamen" id="nombreExamen" class="form-control" required>
+            <span class="error" aria-live="polite"></span>
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-uppercase">
+              cantidad preguntas
+            </label>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="cantidadPreguntas" id="cantidadPreguntas1" value="1">
+              <label class="form-check-label" for="cantidadPreguntas1">
+                1
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="cantidadPreguntas" id="cantidadPreguntas2" value="2">
+              <label class="form-check-label" for="cantidadPreguntas2">
+                2
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="cantidadPreguntas" id="cantidadPreguntas3" value="3">
+              <label class="form-check-label" for="cantidadPreguntas3">
+                3
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="cantidadPreguntas" id="cantidadPreguntas4" value="4">
+              <label class="form-check-label" for="cantidadPreguntas4">
+                4
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="cantidadPreguntas" id="cantidadPreguntas5" value="5"
+                checked>
+              <label class="form-check-label" for="cantidadPreguntas5">
+                5
+              </label>
+            </div>
+          </div>
+          <div class="text-center">
+            <button class="btn btn-primary" id="crearExamen">Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+  <script src="/bootstrap/js/bootstrap.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#crearExamen').click(function (event) {
+        if ('' === $('[name="nombreExamen"]').val()) {
+          return;
+        }
 
-				function showError() {
-					if(nombreExamen.validity.valueMissing) {
-						nombreExamenError.textContent = 'Tienes que ingresar un nombre.';
-					}
+        $.ajax({
+          url: window.location.origin + '/crear-nuevo-examen',
+          type: 'POST',
+          dataType: 'json',
+          context: document.body,
+          data: {
+            nombreExamen: $('[name="nombreExamen"]').val(),
+            cantidadPreguntas: $('[name="cantidadPreguntas"]:checked').val()
+          }
+        }).done(function (data) {
+          $(location).attr("href", `/crear-preguntas/${data.id}`);
+        });
+      });
 
-					// Set the styling appropriately
-					nombreExamenError.className = 'error active';
-				}
-			});
-		</script>
-	</body>
+      const nombreExamen = document.getElementById('nombreExamen');
+      const nombreExamenError = document.querySelector('#nombreExamen + span');
+
+      nombreExamen.addEventListener('input', function (event) {
+        if (nombreExamen.validity.valid) {
+          nombreExamenError.innerHTML = ''; // Reset the content of the message
+          nombreExamenError.className = 'error'; // Reset the visual state of the message
+        } else {
+          showError();
+        }
+      });
+
+      function showError() {
+        if (nombreExamen.validity.valueMissing) {
+          nombreExamenError.textContent = 'Tienes que ingresar un nombre.';
+        }
+
+        // Set the styling appropriately
+        nombreExamenError.className = 'error active';
+      }
+    });
+  </script>
+</body>
+
 </html>
